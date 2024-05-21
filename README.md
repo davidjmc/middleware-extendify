@@ -4,9 +4,6 @@ MEx is a comprehensive solution designed to assist developers in implementing an
 
 > MEx is an an acronym for `Middleware Extendify`, where `Extendify` is formed by blending the words `extend` and `modify`.
 
-# AMoT - Adaptive Middleware of Things
-Adaptive Middleware of Things
-
 ## Table of Contents
 
 - [Installation](#installation)
@@ -16,10 +13,9 @@ Adaptive Middleware of Things
 
 ## Installation
 
-
 ### Clone
 
-- Clone this repository to your local machine using `git@github.com:davidjmc/mex.git`
+- Clone this repository to your local machine using `git@github.com:davidjmc/middleware-extendify.git`
 
 ## Running the MEx
 
@@ -27,36 +23,37 @@ Adaptive Middleware of Things
 
 ### Setup
 
-Go to the project's firebase database, navigate to the collection `Things`, and then to the documents `Broker, Publisher and Subscriber`. In the `configuration` field of these documents, set the local IP in the `broker_host` field.
+- Go to the project's firebase database, navigate to the collection `Things`, and then to the documents `Broker, Publisher and Subscriber`. In the `configuration` field of these documents, set the local IP in the `broker_host` field.
 
 Then:
 
-From the root directory `cd examples\pc\broker` and configure the local IP in `AMOT_HOST` in the main.py file
-From the root directory `cd examples\pc\publisher` and configure the local IP in `AMOT_HOST` in the main.py file
-From the root directory `cd examples\pc\subscriber` and configure the local IP in `AMOT_HOST` in the main.py file
+ - From the root directory `cd examples\pc\broker` and configure the local IP in `AMOT_HOST` in the `main.py` file
+ - From the root directory `cd examples\pc\publisher` and configure the local IP in `AMOT_HOST` in the `main.py` file
+ - From the root directory `cd examples\pc\subscriber` and configure the local IP in `AMOT_HOST` in the `main.py` file
 
 > On the computer
 ### Run Managing System
 
-From the root directory `cd managing-system` and `nodemon main.js`
+ - From the root directory `cd managing-system` and execute `nodemon main.js`
 
 ### Run Broker
 
-From the root directory `cd middleware` and `make broker`
-From the root directory `cd middleware` and `make run-broker`
+ - From the root directory `cd middleware` and execute `make broker`
+ - From the root directory `cd middleware` and execute `make run-broker`
 
 ### Run Publisher
 
-From the root directory `cd middleware` and `make publisher`
-From the root directory `cd middleware` and `make run-publisher`
+ - From the root directory `cd middleware` and execute `make publisher`
+ - From the root directory `cd middleware` and execute `make run-publisher`
 
 ### Run Subscriber
 
-From the root directory `cd middleware` and `make subscriber`
-From root directory `cd middleware` and `make run-subscriber`
+ - From the root directory `cd middleware` and execute `make subscriber`
+ - From root directory `cd middleware` and execute `make run-subscriber`
 
 ### Run AquaMOM Application
-from root directory `cd aquamom`
+
+ - From root directory `cd aquamom`
 
 is needed install dependencies from project in the front and api directory
 
