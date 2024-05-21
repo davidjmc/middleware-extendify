@@ -1,0 +1,182 @@
+{
+  "components": [
+    {
+      "id": "ClientRequestHandler",
+      "version": 1,
+      "name": "ClientRequestHandler",
+      "type": "ClientRequestHandler",
+      "file": "ClientRequestHandler"
+    },
+    {
+      "id": "Marshaller",
+      "version": 1,
+      "name": "Marshaller",
+      "type": "Marshaller",
+      "file": "Marshaller"
+    },
+    {
+      "id": "QueueProxy",
+      "version": 1,
+      "name": "QueueProxy",
+      "type": "QueueProxy",
+      "file": "QueueProxy"
+    },
+    {
+      "id": "ServerRequestHandler",
+      "version": 1,
+      "name": "ServerRequestHandler",
+      "type": "ServerRequestHandler",
+      "file": "ServerRequestHandler"
+    },
+    {
+      "id": "BrokerProxy",
+      "version": 1,
+      "name": "BrokerProxy",
+      "type": "BrokerProxy",
+      "file": "BrokerProxy"
+    },
+    {
+      "id": "BrokerEngine",
+      "version": 1,
+      "name": "BrokerEngine",
+      "type": "BrokerEngine",
+      "file": "BrokerEngine"
+    },
+    {
+      "id": "QueueProxy2",
+      "version": 2,
+      "name": "QueueProxy",
+      "type": "QueueProxy",
+      "file": "QueueProxy2"
+    }
+  ],
+  "things": [
+    {
+      "id": "Publisher",
+      "components": [
+        "QueueProxy",
+        "Marshaller",
+        "ClientRequestHandler"
+      ],
+      "attachments": [
+        {
+          "from": "QueueProxy",
+          "to": "Marshaller"
+        },
+        {
+          "from": "Marshaller",
+          "to": "ClientRequestHandler"
+        }
+      ],
+      "starter": [
+        "QueueProxy"
+      ],
+      "adaptability": {
+        "type": [
+          "None"
+        ],
+        "timeout": 30
+      },
+      "configurations": {
+        "application": {
+          "loop_interval": 10,
+          "publish_in": "d4:6a:6a:fe:23:df",
+          "subscribe_to": ""
+        },
+        "device": {
+          "id": "d4:6a:6a:fe:23:df",
+          "location": ""
+        },
+        "environment": {
+          "await_broker_response": 1,
+          "broker_host": "172.22.64.223",
+          "broker_port": 60000
+        }
+      }
+    },
+    {
+      "id": "Subscriber",
+      "components": [
+        "QueueProxy",
+        "Marshaller",
+        "ClientRequestHandler"
+      ],
+      "attachments": [
+        {
+          "from": "QueueProxy",
+          "to": "Marshaller"
+        },
+        {
+          "from": "Marshaller",
+          "to": "ClientRequestHandler"
+        }
+      ],
+      "starter": [
+        "QueueProxy"
+      ],
+      "adaptability": {
+        "type": [
+          "None"
+        ],
+        "timeout": 5
+      },
+      "configurations": {
+        "application": {
+          "loop_interval": 10,
+          "publish_in": "",
+          "subscribe_to": "d4:6a:6a:fe:23:df"
+        },
+        "device": {
+          "id": "d4:6a:6a:fe:23:df",
+          "location": ""
+        },
+        "environment": {
+          "await_broker_response": 1,
+          "broker_host": "172.22.64.223",
+          "broker_port": 60000
+        }
+      }
+    },
+    {
+      "id": "Broker",
+      "components": [
+        "BrokerProxy",
+        "Marshaller",
+        "ServerRequestHandler",
+        "BrokerEngine"
+      ],
+      "attachments": [
+        {
+          "from": "BrokerProxy",
+          "to": "ServerRequestHandler"
+        },
+        {
+          "from": "ServerRequestHandler",
+          "to": "Marshaller"
+        },
+        {
+          "from": "Marshaller",
+          "to": "BrokerEngine"
+        }
+      ],
+      "starter": [
+        "BrokerProxy"
+      ],
+      "adaptability": {
+        "type": [
+          "None"
+        ],
+        "timeout": 5
+      },
+      "configurations": {
+        "application": {},
+        "device": {},
+        "environment": {
+          "await_broker_response": 1,
+          "broker_host": "172.22.64.223",
+          "broker_port": 60000
+        }
+      }
+    }
+  ]
+}

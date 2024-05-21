@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@firebase/firestore": "^4.6.0",
+    "firebase": "^10.11.0",
+    "firebase-admin": "^12.1.0",
+    "firebase-functions": "^4.9.0",
+    "json-rules-engine": "^6.5.0",
+    "npm": "^10.5.2"
+  }
+}
