@@ -173,27 +173,33 @@ export class DeviceService {
   calcPercentBattery(voltage: number) {
     // Fator de ajuste para a relação entre as resistências do divisor de tensão
     const ratioFactor = 1.27;
+    console.log("Voltage = ", voltage)
 
     const vinMin = 2.8;
     const vinMax = 4.2;
 
     // Convert Voltage in 3.3v factor
     const rVoltage = (voltage / 1024.0) * 3.3;
+    console.log("rVoltage = ", rVoltage)
 
     const fVoltage = rVoltage * ratioFactor;
+    console.log("fVoltage = ", fVoltage)
 
     // Limitar a voltagem medida aos limites dados
     const measureVoltage = Math.min(Math.max(fVoltage, vinMin), vinMax);
+    console.log("measureVoltage = ", measureVoltage)
 
     // Calcular a diferença total
     const totalDiff = vinMax - vinMin;
 
     // Calcular o percentual usando a fórmula de interpolação linear
-    let percent = ((measureVoltage - vinMin) / totalDiff) * 100;
-    console.log("AQUIIIII", percent)
+    // let percent = (measureVoltage * 100) / vinMax;
+    let percent = ((measureVoltage - vinMin) / totalDiff) * 100
+    console.log("percent = ", percent)
 
     // Garantir que o percentual está dentro do intervalo [0, 100]
-    percent = Math.min(Math.max(percent, 0.0), 100.0);
+    let result = Math.min(Math.max(percent, 0.0), 100.0);
+    console.log("percent after= ", result)
 
     return percent;
   }
@@ -302,7 +308,7 @@ export class DeviceService {
           const currentVolume = this.calcCurrentVolume(msg.distance, device);
           // const currentBattery = this.calcPercentBattery(4.2);
           // const currentBattery = msg.battery;
-          const currentBattery = this.calcPercentBattery(msg.battery);
+          const currentBattery = this.calcPercentBattery(msg.battery).toFixed(0);
 
           const timestamp = new Date(msg.timer);
 

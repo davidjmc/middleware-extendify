@@ -27,9 +27,9 @@ MEx is a comprehensive solution designed to assist developers in implementing an
 
 Then:
 
- - From the root directory `cd examples\pc\broker` and configure the local IP in `AMOT_HOST` in the `main.py` file
- - From the root directory `cd examples\pc\publisher` and configure the local IP in `AMOT_HOST` in the `main.py` file
- - From the root directory `cd examples\pc\subscriber` and configure the local IP in `AMOT_HOST` in the `main.py` file
+ - From the root directory `cd examples\pc\broker` and configure the local IP in `AMOT_HOST` in the `main.py`
+ - From the root directory `cd examples\pc\publisher` and configure the local IP in `AMOT_HOST` in the `main.py`
+ - From the root directory `cd examples\pc\subscriber` and configure the local IP in `AMOT_HOST` in the `main.py`
 
 > On the computer
 ### Run Managing System
@@ -50,22 +50,6 @@ Then:
 
  - From the root directory `cd middleware` and execute `make subscriber`
  - From root directory `cd middleware` and execute `make run-subscriber`
-
-### Run AquaMOM Application
-
- - From root directory `cd aquamom`
-
-is needed install dependencies from project in the front and api directory
-
-#### Run frontend
-`cd front` and `npm install` and `npm run dev`
-
-#### Run api
-
-to run the database execute `docker-compose up -d`
-
-`cd api` and `npm install` and `npm run start:dev`
-
 
 > On the thing
 

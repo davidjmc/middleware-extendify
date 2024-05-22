@@ -75,7 +75,7 @@ class App:
 
     altura = r.randint(0, 100)
 
-    battery = r.randint(0, 1023)
+    battery = r.randint(684, 1023)
 
     # Imprimir a saída formatada  
     # rint(saida_formatada)
