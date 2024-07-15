@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc, where, query, getDocs } from '@firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, where, query, getDocs, collection } from '@firebase/firestore';
 import { components, things } from '../firebase.js';
 import fs from 'fs';
 
@@ -15,11 +15,10 @@ export default class DB {
     }
 
     static async getComponentsByName(name) {
-        // console.log('getting components for ' + name)
+        
         const componentDocRef = components();
         const snapshot = await getDocs(query(componentDocRef, where('name', '==', name)));
-        //let snapshot = await componentDocRef.where('name', '==', name).get()
-        // console.log(snapshot)
+        
         let list = []
         await snapshot.forEach(doc => {
             let component = doc.data()
@@ -51,7 +50,6 @@ export default class DB {
 
     static async saveThing(thing) {
         console.log('Save thing')
-        //console.log(thing.configurations)
         const thingDocRef = doc(things(), thing.id);
 
         await updateDoc(thingDocRef, {
@@ -62,7 +60,6 @@ export default class DB {
             })),
             starter: thing.starter.map(c => c.type),
             trialMode: thing.trialMode,
-            //vars: thing.vars,
             'configurations': {
                 'application': thing.configurations.application,
                 'device': thing.configurations.device,
@@ -102,22 +99,23 @@ export default class DB {
         const thing = thingDocSnapshot.data();
 
         // saving current version to rolledBack
-        let rolledBack = thingDoc.collection('rolledBack')
-        await rolledBack.doc('' + new Date().getTime()).set({
+        let rolledBack = collection(thingDocRef, 'rolledBack');
+        await setDoc(doc(rolledBack, '' + new Date().getTime()), {
             'components': thing.components,
             'attachments': thing.attachments,
-            'starter': thing.starter
-        })
+            'starter': thing.starter,            
+        });
 
         if (!thing.backup) {
             throw `Cannot rollback without a backup (thing ${id})`
         }
-        await thingDoc.update({
+
+        await updateDoc(thingDocRef, {
             'components': thing.backup.components,
             'attachments': thing.backup.attachments,
             'starter': thing.backup.starter,
             'trialMode': false
-        })
+        });
     }
 
     static async getFile(filename, path = 'components') {
@@ -131,5 +129,3 @@ export default class DB {
         throw `File ${filename}.py does not exists`
     }
 }
-
-//module.exports = DB

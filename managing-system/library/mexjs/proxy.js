@@ -1,6 +1,6 @@
-const Marshaller = require('./marshaller');
+import Marshaller from './marshaller.js';
 
-class QueueProxy {
+export default class QueueProxy {
   constructor() {
     this.marshaller = new Marshaller();
     this.messageCallback = null;
@@ -44,4 +44,4 @@ class QueueProxy {
   }
 }
 
-module.exports = QueueProxy;
+//module.exports = QueueProxy;

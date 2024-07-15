@@ -1,6 +1,6 @@
-const ClientRequestHandler = require('./crh');
+import ClientRequestHandler from './crh2.js';
 
-class Marshaller {
+export default class Marshaller {
     constructor() {
         this.crh = new ClientRequestHandler();
     }
@@ -216,4 +216,4 @@ class Marshaller {
     // }
 }
 
-module.exports = Marshaller;
+// module.exports = Marshaller;

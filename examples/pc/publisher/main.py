@@ -3,7 +3,7 @@ from agent import AmotAgent
 configs ={
     'THING_ID': 'Publisher', # thing_id, get from thing
     
-    'AMOT_HOST': '172.22.64.223',
+    'AMOT_HOST': '192.168.0.7',
     'AMOT_PORT': 60010
     }
 

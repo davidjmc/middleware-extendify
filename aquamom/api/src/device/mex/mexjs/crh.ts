@@ -7,7 +7,7 @@ export class ClientRequestHandler {
     // const data = JSON.stringify(invData);
     //const data = invData['DATA'];
     // MUDAR o ip aqui
-    const host = '172.22.64.223';
+    const host = '192.168.0.7';
     let port = 0;
 
     if (isNaN(port) || port === 0) {

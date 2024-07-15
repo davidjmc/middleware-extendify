@@ -1,6 +1,6 @@
-const net = require('net');
+import * as net from 'net';
 
-class ClientRequestHandler {
+export default class ClientRequestHandler {
     constructor() {}
 
     async run(invData) {
@@ -8,7 +8,7 @@ class ClientRequestHandler {
         // console.log(invData);
         // const data = JSON.stringify(invData);
         //const data = invData['DATA'];
-        const host = '172.22.64.223';
+        const host = '192.168.0.9';
         let port = 0;
 
         if (isNaN(port) || port === 0) {
@@ -70,4 +70,4 @@ class ClientRequestHandler {
     }
 }
 
-module.exports = ClientRequestHandler;
+//module.exports = ClientRequestHandler;

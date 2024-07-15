@@ -18,6 +18,7 @@ interface AggregatedDeviceHistory {
 interface DeviceWithAggregatedHistory extends Device {
   aggregatedHistory: AggregatedDeviceHistory[];
   remainingDays: number;
+  dailyConsumption: number;
 }
 
 // Função auxiliar para formatar a data no formato 'DD/MM/YY'
@@ -154,54 +155,82 @@ export class DeviceService {
       after: device?.devicesHistory[0]?.battery || null,
     };
 
-    console.log(t);
+    // console.log(t);
     return t;
   }
 
   calcCurrentVolume(distance: number, device: Device): number {
     const { height, baseRadius } = device;
+    const errorConsidered = 1.59794;
+
+    //console.log("Device's distance: ", distance, "Real distance: ", )
+
+    const realDistance = distance - errorConsidered;
+
+    //console.log("Distance real na regua = ",realDistance)
+
+    console.log("Device's distance: ", distance, "Real distance: ", realDistance)
 
     // const currentHeight = height - distance / 100;
 
-    const currentHeight = height - (distance / 100);
+    const reservourDistance = realDistance * 0.0112
 
-    const currentVolume = Math.PI * Math.pow(baseRadius, 2) * currentHeight;
+    const RADIUS = 1.6821; // meters
+    const MAX_HEIGHT = 1.80;
+
+    // console.log("Distance converted = ", reservourDistance)
+
+    const reservourHeight = 1.8 - (reservourDistance / 100);
+
+    // console.log("currentHeight = ", reservourHeight)
+
+    //const currentVolume = Math.PI * Math.pow(baseRadius, 2) * currentHeight;
+    const currentVolume = Math.PI * Math.pow(RADIUS, 2) * reservourHeight;
+
+    // console.log(currentVolume)
 
     return Number((currentVolume * 1000).toFixed(2));
   }
 
+  mapping(v: number, in_min: number, in_max: number, out_min: number, out_max: number) {
+    const result = Math.round((v - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
+    return result;
+  }
+  
   calcPercentBattery(voltage: number) {
     // Fator de ajuste para a relação entre as resistências do divisor de tensão
     const ratioFactor = 1.27;
-    console.log("Voltage = ", voltage)
+    // console.log("Voltage = ", voltage)
 
     const vinMin = 2.8;
     const vinMax = 4.2;
 
+    // console.log("voltage = ", voltage)
+
     // Convert Voltage in 3.3v factor
     const rVoltage = (voltage / 1024.0) * 3.3;
-    console.log("rVoltage = ", rVoltage)
+    // console.log("rVoltage = ", rVoltage)
 
     const fVoltage = rVoltage * ratioFactor;
-    console.log("fVoltage = ", fVoltage)
+    // console.log("fVoltage = ", fVoltage)
 
     // Limitar a voltagem medida aos limites dados
-    const measureVoltage = Math.min(Math.max(fVoltage, vinMin), vinMax);
-    console.log("measureVoltage = ", measureVoltage)
+    const measureVoltage = this.mapping(fVoltage, vinMin, vinMax, 0, 100);
+    // console.log("measureVoltage = ", measureVoltage)
 
     // Calcular a diferença total
-    const totalDiff = vinMax - vinMin;
+    //const totalDiff = vinMax - vinMin;
 
     // Calcular o percentual usando a fórmula de interpolação linear
     // let percent = (measureVoltage * 100) / vinMax;
-    let percent = ((measureVoltage - vinMin) / totalDiff) * 100
-    console.log("percent = ", percent)
+    //let percent = ((measureVoltage - vinMin) / totalDiff) * 100
+    //console.log("percent = ", percent)
 
     // Garantir que o percentual está dentro do intervalo [0, 100]
-    let result = Math.min(Math.max(percent, 0.0), 100.0);
-    console.log("percent after= ", result)
+    //let result = Math.min(Math.max(percent, 0.0), 100.0);
+    //console.log("percent after= ", result)
 
-    return percent;
+    return measureVoltage;
   }
 
   mapDeviceToAggregatedHistory(device: Device): DeviceWithAggregatedHistory {
@@ -217,14 +246,33 @@ export class DeviceService {
       return acc;
     }, {} as { [date: string]: DeviceHistory[] });
 
+    let dailyConsumption = 0;
+
     // Calcula o volume máximo de água e nível de bateria por dia
     for (const date in groupedHistory) {
+      
       const historyList = groupedHistory[date];
+
+      const formattedDate = formatDate(date);
+
       aggregatedHistory.push({
-        date: formatDate(date),
+        date: formattedDate,
         volume: historyList[historyList.length - 1].water,
         battery: historyList[historyList.length - 1].battery,
       });
+
+      if (formattedDate === DateTime.now().toFormat('dd/LL/yy')) {
+        for (let i = 1; i < historyList.length; i++) {
+          const previousWaterLevel = parseFloat(
+            historyList[i-1].water.toString(),
+          );
+          const currentWaterLevel = parseFloat(historyList[i].water.toString());
+
+          if (currentWaterLevel < previousWaterLevel) {
+            dailyConsumption += previousWaterLevel - currentWaterLevel;
+          }
+        }
+      }
     }
 
     const remainingDays = () => {
@@ -240,6 +288,7 @@ export class DeviceService {
       ...device,
       aggregatedHistory,
       remainingDays: remainingDays(),
+      dailyConsumption: +dailyConsumption.toFixed(2),
     };
 
     return deviceWithAggregatedHistory;
@@ -256,9 +305,9 @@ export class DeviceService {
 
       const currentPercentage = (currentVolume * 100) / device.maxCapacity;
 
-      Logger.log(
-        `Receiving update from ${device.mac} - currentVolume: ${currentVolume} - currentPercentage: ${currentPercentage}`,
-      );
+      // Logger.log(
+      //   `Receiving update from ${device.mac} - currentVolume: ${currentVolume} - currentPercentage: ${currentPercentage}`,
+      // );
 
       this.deviceHistoryService.create({
         water: Number(currentVolume),
@@ -306,6 +355,7 @@ export class DeviceService {
 
         if (msg) {
           const currentVolume = this.calcCurrentVolume(msg.distance, device);
+          console.log("Aqui: ", msg.distance)
           // const currentBattery = this.calcPercentBattery(4.2);
           // const currentBattery = msg.battery;
           const currentBattery = this.calcPercentBattery(msg.battery).toFixed(0);
@@ -317,9 +367,9 @@ export class DeviceService {
             device.maxCapacity
           ).toFixed(2);
 
-          Logger.log(
-            `Receiving update from ${device.mac} - currentVolume: ${currentVolume} - currentPercentage: ${currentPercentage} - currentBattery: ${currentBattery}`,
-          );
+          // Logger.log(
+          //   `Receiving update from ${device.mac} - currentVolume: ${currentVolume} - currentPercentage: ${currentPercentage} - currentBattery: ${currentBattery}`,
+          // );
 
           this.deviceHistoryService.create({
             water: Number(currentVolume),

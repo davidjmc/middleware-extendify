@@ -9,7 +9,7 @@ const proxy = new QueueProxy();
 setInterval(() => {
   // Checar mensagens
   console.log('Checking message from 1-new');
-  proxy.checkMessage('1-new').then((result) => {
+  proxy.checkMessage('d4:6a:6a:fe:23:df').then((result) => {
     Logger.log(result);
   });
 }, 3000);

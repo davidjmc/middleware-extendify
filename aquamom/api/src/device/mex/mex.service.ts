@@ -11,7 +11,7 @@ export class MexService {
     // Teste checando uma mensagem para o servidor a cada 3 segundos
     setInterval(() => {
       // Checar mensagens
-      console.log('Checking message');
+      // console.log('Checking message');
       proxy.checkMessage('d4:6a:6a:fe:23:df').then((result) => {
         //console.log(result)
         callback(JSON.stringify(result));

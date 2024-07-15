@@ -13,10 +13,7 @@ class BrokerEngine():
         if invArg['OP'] == 'Publish':
             for topic in invArg['TOPICS']:
                 self.message_storage.add_message(topic, invArg['MSG'])
-                # print("Messages: {}".format(self.message_storage.get_message_by_topic(topic)))
                 message = self.message_storage.get_message_by_topic(topic).popleft()
-
-                # print("Subscriptions: {}".format(self.subscription_manager.get_subscriptions()))
                 for subscription in self.subscription_manager.get_subscriptions().keys():
                     if topic in self.subscription_manager.get_subscriptions()[subscription].keys():
                         self.subscription_manager.get_subscriptions()[subscription][topic].append(message)
@@ -25,7 +22,6 @@ class BrokerEngine():
         elif invArg['OP'] == 'Subscribe':
             for topic in invArg['TOPICS']:
                 self.subscription_manager.insert_subscription(topic, invArg['THING_ID'], invArg['MSG'])
-                # print(self.subscription_manager.subcriptions)
             pass
         
         elif invArg['OP'] == 'CheckMsg':

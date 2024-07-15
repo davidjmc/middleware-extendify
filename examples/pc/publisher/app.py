@@ -108,9 +108,11 @@ class App:
 
     string_volume = str(volume)
     string_capacity = str(capacity)
+    string_data = str(data.replace(":", "."))
 
     Amot.agent().app_context['fluid_volume'] = b'' + string_volume.encode("utf-8") + b'' 
     Amot.agent().app_context['reservoir_capacity'] = b'' + string_capacity.encode("utf-8") + b''
+    Amot.agent().app_context['timestamp'] = b'' + string_data.encode("utf-8") + b''
 
     self.counter += 1
 

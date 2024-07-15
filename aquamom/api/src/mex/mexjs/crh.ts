@@ -3,11 +3,11 @@ import * as net from 'net';
 export class ClientRequestHandler {
   async run(invData) {
     const data = invData['DATA'];
-    // console.log(invData);
-    // const data = JSON.stringify(invData);
+    //console.log("Esse aqui: ", data);
+    //const data = JSON.stringify(invData);
     //const data = invData['DATA'];
     // MUDAR o ip aqui
-    const host = '172.22.64.223';
+    const host = '192.168.0.7';
     let port = 0;
 
     if (isNaN(port) || port === 0) {
@@ -18,11 +18,6 @@ export class ClientRequestHandler {
 
     try {
       await socket.connect(port, host);
-      // if (parseInt(process.env.await_broker_response) === 1) {
-      //     socket.setBlocking(true);
-      // } else {
-      //     socket.setBlocking(false);
-      // }
     } catch (e) {
       console.error('Error: ' + e + " Couldn't connect with socket-server");
       return false;

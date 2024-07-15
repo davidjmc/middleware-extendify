@@ -1,10 +1,14 @@
 import {
   ActionIcon,
+  Center,
   Divider,
+  Flex,
   Grid,
   Group,
   Menu,
   Paper,
+  Progress,
+  RingProgress,
   Text,
   Title,
   Tooltip,
@@ -28,6 +32,7 @@ interface ReservatoryInformationProps {
   baseRadius: string;
   water: string;
   remainingDays: number;
+  dailyConsumption: number;
 }
 
 export const ReservatoryInformation = ({
@@ -41,10 +46,23 @@ export const ReservatoryInformation = ({
   name,
   water,
   remainingDays,
+  dailyConsumption,
 }: ReservatoryInformationProps) => {
   const { deleteDevice } = useDevice();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const ringColor = (value: number) => {
+    if (value < 25) {
+      return 'green';
+    }
+
+    if (value > 25 && value < 75) {
+      return 'yellow';
+    }
+
+    return 'red';
+  };
 
   const handleDelete = (id: string) => {
     deleteDevice(id)
@@ -163,10 +181,29 @@ export const ReservatoryInformation = ({
         <Grid.Col span={12}>
           <Tooltip label={'É considerado um consumo diario de 100L'}>
             <Group spacing={'xs'}>
-              <Title order={5}>Remaining Water Supply:</Title>
+              <Title order={5}>Remaining Supply:</Title>
               <Text size="md" color="dimmend">
-                {remainingDays} dias
+                {remainingDays} Days
               </Text>
+            </Group>
+          </Tooltip>
+        </Grid.Col>
+        <Grid.Col span={12}>
+          <Tooltip label={'A daily consumption of 100L is considered'}>
+            <Group spacing={'xs'}>
+              <Title order={5}>Daily Consumption:</Title>
+              <Text size="md" color="dimmend">
+                {dailyConsumption} L
+              </Text>
+              <RingProgress
+                size={30}
+                sections={[
+                  {
+                    value: 500,
+                    color: ringColor(dailyConsumption),
+                  },
+                ]}
+              />
             </Group>
           </Tooltip>
         </Grid.Col>
